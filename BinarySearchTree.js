@@ -13,15 +13,15 @@ class BinarySearchTree {
       this.value = value;
     } else if (key < this.key) {
       if (this.left === null) {
-        this.left = new BinarySearchTree(key, value);
+        this.left = new BinarySearchTree(key, value, this);
       } else {
-        this.left.insert(key,value);
+        this.left.insert(key, value);
       }
     } else {
       if (this.right === null) {
-        this.right = new BinarySearchTree(key, value);
+        this.right = new BinarySearchTree(key, value, this);
       } else {
-        this.right.insert(key, value)
+        this.right.insert(key, value);
       }
     }
   }
@@ -33,7 +33,7 @@ class BinarySearchTree {
       return this.left.find(key);
     } else if (key > this.key && this.right) {
       return this.right.find(key);
-    } else{
+    } else {
       throw new Error('Key Error');
     }
   }
@@ -88,7 +88,7 @@ class BinarySearchTree {
   }
 
   _findMin() {
-    if(!this.left) {
+    if (!this.left) {
       return this;
     }
     return this.left._findMin();
@@ -124,15 +124,15 @@ BST.insert('N');
 //
 // result would equal = 9
 
-const BST2 = new BinarySearchTree()
+const BST2 = new BinarySearchTree();
 
-BST2.insert(3, 3)
-BST2.insert(4, 4)
+BST2.insert(3, 3);
+BST2.insert(4, 4);
 BST2.insert(2, 2)
-BST2.insert(5, 5)
+BST2.insert(5, 5);
 
-function tree(t){
-  if(!t){
+function tree(t) {
+  if (!t) {
     return 0;
   }
   return tree(t.left) + t.value + tree(t.right);
@@ -143,8 +143,8 @@ function tree(t){
 //Drill 5.
 // 
 // 
-function height(t, n = 0){
-  if(!t){
+function height(t, n = 0) {
+  if (!t) {
     return n;
   }
   n++;
@@ -167,6 +167,105 @@ function isItBinary(tree, binary = true) {
   binary = leftCheck && rightCheck;
   return isItBinary(tree.left, binary) && isItBinary(tree.right, binary);
 }
-console.log(isItBinary(BST));
+// console.log(isItBinary(BST));
 
 // console.log(isItBST(BST2))
+
+// Drill 7.
+
+// 3rd highest (?)
+//       10
+//   5        15
+//  1 9     12     19
+//        11 14   17
+//               16
+function thirdLargest(tree) {
+  if (tree.right) return thirdLargest(tree.right);
+  if (tree.left) return thirdLargest(tree.left);
+  
+  // we'll only get here when there's no left or right
+  return tree.key;
+}
+
+// console.log(thirdLargest(BST))
+
+// Drill 8.
+// skip if tree parent is null
+function checkBalanced(tree, balanced = true, left = true) {
+  if (!tree || (!tree.left && !tree.right) || !balanced) return balanced;
+  if (tree.parent !== null) {
+    balanced = (tree.left || tree.right) && left ? !!tree.parent.right : !!tree.parent.left;
+  }
+  
+  let leftCheck = checkBalanced(tree.left, balanced); // true
+  let rightCheck = checkBalanced(tree.right, balanced, false); 
+
+  return leftCheck && rightCheck;
+}
+
+console.log(checkBalanced(BST));
+console.log(checkBalanced(BST2));
+//we need to see if each node has a left.left.left then it needs a left.right if it has a right.right, it needs a right.left.  !right.right !left.left
+
+//            20
+//     15               25  
+//  10  19          23      30
+// 5              22   24     35
+//              21              40
+         
+
+let arr1 = [3,5,4,6,1,0,2]
+let arr2 = [3,1,5,2,4,6,0]
+
+// [2,4,1,3]
+// [2,1,4]
+
+function exactBST(arr1, arr2) {
+  if (arr1.length !== arr2.length) return false;
+  if (arr1[0] !== arr2[0]) return false;
+}
+
+exactBST(arr1, arr2);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// arr1, arr2
+
+// let leftArray1 = []; // => 1,0,2
+// let rightArray1 = []; // => 5,4,6
+// let leftArray2 = [];  // => 1,2,0
+// let rightArray2 = []; // => 5,4,6
+
+// let root = arr1[0];
+// for (let i = 1; i < arr1.length; i++) {
+//   if (arr1[i] < root) leftArray1.push(arr1[i]);
+//   if (arr1[i] > root) rightArray1.push(arr1[i]);
+// 
+//   if (arr2[i] < root) leftArray2.push(arr2[i]);
+//   if (arr2[i] > root) rightArray2.push(arr2[i]);
+// }
+
+// [3,5,4,6,1,0,2]
+// 3, 4, 5, 1, 0, 2, 6
+// [3,1,5,2,4,6,0]
+// 3, 1, 5
+
